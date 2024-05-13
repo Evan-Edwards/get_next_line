@@ -11,52 +11,71 @@
 /* ************************************************************************** */
 #include "get_next_line.h"
 
-char    *set_line(char *stash)
+static char	*set_line(char *stash)
 {
-    int i;
+	int		i;
+	char	*stash_temp;
 
-    i = 0;
-    while (stash[i])
-    {
-        if (stash[i] == '\n' || stash[i] == '\0')
-            stash[i] = '\0';
-            stash += i + 1;
-            return (ft_substring(stash, 0, i + 1));
-        i++;
-    }
-    return (ft_strdup(stash)); //shouldn't need it
+	i = 0;
+	while (stash[i])
+	{
+		if (stash[i] == '\n' || stash[i] == '\0')
+		{
+			stash[i] = '\0';
+			stash_temp = stash;
+			stash += i + 1;
+			return (ft_substr(stash_temp, 0, i + 1));
+		}
+		i++;
+	}
+	return (ft_strdup(stash));
 }
 
-/* Takes const char * stash, reads until \n or \0 is found. If found it sets a null
+/* Takes const char * stash,
+	reads until \n or \0 is found. If found it sets a null
 character at the end of the line. It returns a substring of the buffer to the
 end of the line or to the end of the buffer */
 
-char    *fill_line(int fd, char *left_c, char *buf)
+static char	*fill_line(int fd, char *stash, char *buf)
 {
-    char    *new_line;
-    
-    while (strchr(buf, '\n') == NULL && strchr(buf, '\0') == NULL)
-    {
-        read(fd, buf, BUFFER_SIZE);
-        stash = ft_strjoin(stash, buf); //can I join when it's empty?
-    }
-    stash = ft_strjoin(stash, buf);
-    new_line = set_line(const char *stash);
-    return (new_line);
-}
+	char	*new_line;
+	char	*temp;
+    ssize_t b_read;
 
-char    *get_next_line(int fd)
+    if (!stash)
+	    stash = ft_strdup("");
+	read(fd, buf, BUFFER_SIZE);
+	buf[BUFFER_SIZE] = '\0';
+	while (ft_strchr(buf, '\n') == NULL)
+	{
+		temp = stash;
+		stash = ft_strjoin(stash, buf);
+		read(fd, buf, BUFFER_SIZE);
+		buf[BUFFER_SIZE] = '\0';
+	}
+	new_line = set_line(stash);
+	return (new_line);
+}
+/*reads through fd while buf does not contain a new line or NULL. It joins stash
+and buf together and continues until buf does contain a new line or NULL. It then
+sends the stash to the set_line funcion.*/
+
+char	*get_next_line(int fd)
 {
-    const char  *stash
-    void        *buf;
-    size_t      r;
-    char        *new_line;
+	char		*buf;
+	char		*line;
+	static char	*stash;
 
-    buf = (void *)malloc (BUFFER_SIZE + 1);
-    if (!buf)
+	if (fd < 0 || fd > 256 || BUFFER_SIZE <= 0)
+		return (NULL);
+	buf = (char *)malloc(BUFFER_SIZE + 1);
+	if (!buf)
+		return (NULL);
+	line = fill_line(fd, stash, buf);
+	free(buf);
+    if (!line)
         return (NULL);
-    if (fd < 0 || fd > 256)
-        return (NULL);
-    fd = open(fd, O_RDONLY); //open file
-
+	return (line);
 }
+/*Checks first that fd and BUFFER_SIZE are valid. It then makes a buffer (buf)
+of size BUFFER_SIZE + 1.*/
