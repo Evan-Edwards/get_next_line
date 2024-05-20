@@ -75,7 +75,7 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*stash;
 
-	if (fd < 0 || fd > RLIMIT_NOFILE || BUFFER_SIZE <= 0 || read(fd, 0, 0 < 0))
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0 < 0))
 	{
 		free(stash);
 		stash = NULL;
@@ -86,6 +86,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = fill_line(fd, stash, buf);
 	free(buf);
+	buf = NULL;
 	if (!line)
 		return (NULL);
 	stash = set_line(line);
@@ -93,3 +94,10 @@ char	*get_next_line(int fd)
 }
 /*Checks first that fd and BUFFER_SIZE are valid. It then makes a buffer (buf)
 of size BUFFER_SIZE + 1.*/
+
+/*
+int	main()
+{
+
+}
+*/
