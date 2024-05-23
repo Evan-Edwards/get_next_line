@@ -52,7 +52,7 @@ static char	*fill_line(int fd, char *stash, char *buf)
 			return (NULL);
 		}
 		if (b_read == 0)
-			break ;
+			break;
 		buf[b_read] = '\0';
 		if (!stash)
 			stash = ft_strdup("");
@@ -61,8 +61,8 @@ static char	*fill_line(int fd, char *stash, char *buf)
 		free(temp);
 		if (!stash)
 			return (NULL);
-		if (ft_strchr(buf, '\n'))
-			break ;
+		if (ft_strchr(stash, '\n'))
+			break;
 	}
 	return (stash);
 }
@@ -76,7 +76,7 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*stash;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0 < 0))
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
 		if(stash)
 		{
