@@ -21,13 +21,13 @@ static char	*set_line(char *line)
 		i++;
 	if (line[i] == '\0' || line[i + 1] == '\0')
 		return (NULL);
-	stash_r = ft_substr(line, i + 1, ft_strlen(line) - i);
+	stash_r = ft_substr(line, i + 1, ft_strlen(line) - i - 1);
 	if (stash_r && *stash_r == 0)
 	{
 		free(stash_r);
 		stash_r = NULL;
 	}
-	line[i + 1] = 0;
+	line[i + 1] = '\0';
 	return (stash_r);
 }
 
@@ -59,7 +59,8 @@ static char	*fill_line(int fd, char *stash, char *buf)
 		temp = stash;
 		stash = ft_strjoin(stash, buf);
 		free(temp);
-		temp = (NULL);
+		if (!stash)
+			return (NULL);
 		if (ft_strchr(buf, '\n'))
 			break ;
 	}
@@ -77,8 +78,11 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0 < 0))
 	{
-		free(stash);
-		stash = NULL;
+		if(stash)
+		{
+			free(stash);
+			stash = NULL;
+		}
 		return (NULL);
 	}
 	buf = (char *)malloc(BUFFER_SIZE + 1);

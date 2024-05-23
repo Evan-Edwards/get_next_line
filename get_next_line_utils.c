@@ -91,6 +91,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	if (!s1)
 		return (ft_strdup(s2));
+	if (!s2)
+		return (ft_strdup(s1));
 	s3 = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!s3)
 		return (NULL);
