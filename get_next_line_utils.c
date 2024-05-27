@@ -79,25 +79,26 @@ char	*ft_substr(const char *s, unsigned int start, size_t len)
 	return (sub);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *stash, char *buf)
 {
 	char	*s3;
 	char	*s3_ptr;
 
-	if (!s1 && !s2)
+	if (!stash && !buf)
 		return (NULL);
-	if (!s1)
-		return (ft_strdup(s2));
-	if (!s2)
-		return (ft_strdup(s1));
-	s3 = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!stash)
+		return (ft_strdup(buf));
+	if (!buf)
+		return (ft_strdup(stash));
+	s3 = malloc(ft_strlen(stash) + ft_strlen(buf) + 1);
 	if (!s3)
 		return (NULL);
 	s3_ptr = s3;
-	while (*s1)
-		*s3++ = *s1++;
-	while (*s2)
-		*s3++ = *s2++;
+	while (*stash)
+		*s3++ = *stash++;
+	while (*buf)
+		*s3++ = *buf++;
 	*s3 = '\0';
+    free (stash);
 	return (s3_ptr);
 }
