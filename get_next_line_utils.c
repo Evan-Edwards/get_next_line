@@ -89,7 +89,7 @@ char	*ft_strjoin(char *stash, char *buf)
 	if (!stash)
 		return (ft_strdup(buf));
 	if (!buf)
-		return (ft_strdup(stash));
+		return (stash);
 	s3 = malloc(ft_strlen(stash) + ft_strlen(buf) + 1);
 	if (!s3)
 		return (NULL);
