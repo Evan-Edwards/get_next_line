@@ -96,7 +96,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	s3_ptr = s3;
 	while (*s1)
 		*s3++ = *s1++;
-	while (s2)
+	while (*s2)
 		*s3++ = *s2++;
 	*s3 = '\0';
 	return (s3_ptr);

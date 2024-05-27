@@ -11,24 +11,35 @@
 /* ************************************************************************** */
 #include "get_next_line.h"
 
-static char	*set_line(char *line)
+static void	free_and_null(char **ptr)
+{
+	if (*ptr)
+	{
+		free(*ptr);
+		*ptr = NULL;
+	}
+}
+
+static char	*set_line(char **stash)
 {
 	int		i;
-	char	*stash_r;
+	char	*line;
+	char	*temp;
 
 	i = 0;
-	while (line[i] != '\n' && line[i] != '\0')
+	while ((*stash)[i] != '\n' && (*stash)[i] != '\0')
 		i++;
-	if (line[i] == '\0' || line[i + 1] == '\0')
-		return (NULL);
-	stash_r = ft_substr(line, i + 1, ft_strlen(line) - i - 1);
-	if (stash_r && *stash_r == 0)
+	if ((*stash)[i] == '\0')
 	{
-		free(stash_r);
-		stash_r = NULL;
+		line = ft_strdup(*stash);
+		free_and_null(stash);
+		return (line);
 	}
-	line[i + 1] = '\0';
-	return (stash_r);
+	line = ft_substr(*stash, 0, i + 1);
+	temp = ft_strdup(*stash + i + 1);
+	free_and_null(stash);
+	*stash = temp;
+	return (line);
 }
 
 /*Takes the line created in fill_line, checks for a new line or a NULL.
@@ -37,10 +48,10 @@ If new line found it is set to NULL. If null is not found, a substring
 of the line starting from after the new line is made and returned to be 
 set as stash*/
 
-static char	*fill_line(int fd, char *stash, char *buf)
+static char	*fill_stash(int fd, char **stash, char *buf)
 {
-	char	*temp;
 	ssize_t	b_read;
+	char	*temp;
 
 	b_read = 1;
 	while (b_read > 0)
@@ -48,23 +59,22 @@ static char	*fill_line(int fd, char *stash, char *buf)
 		b_read = read(fd, buf, BUFFER_SIZE);
 		if (b_read == -1)
 		{
-			free(stash);
+			free_and_null(stash);
 			return (NULL);
 		}
-		if (b_read == 0)
-			break;
 		buf[b_read] = '\0';
-		if (!stash)
-			stash = ft_strdup("");
-		temp = stash;
-		stash = ft_strjoin(stash, buf);
+		if (*stash)
+			temp = *stash;
+		*stash = ft_strjoin(*stash, buf);
 		free(temp);
-		if (!stash)
+		if (!*stash)
 			return (NULL);
-		if (ft_strchr(stash, '\n'))
-			break;
+		if (ft_strchr(*stash, '\n'))
+			break ;
 	}
-	return (stash);
+	if (!*stash)
+		free_and_null(NULL);
+	return (*stash);
 }
 /*reads through fd while buf does not contain a new line or NULL. It joins stash
 and buf together and continues until buf does contain a new line or NULL. It then
@@ -78,30 +88,18 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
-		if(stash)
-		{
-			free(stash);
-			stash = NULL;
-		}
+		free_and_null(&stash);
 		return (NULL);
 	}
 	buf = (char *)malloc(BUFFER_SIZE + 1);
 	if (!buf)
 		return (NULL);
-	line = fill_line(fd, stash, buf);
-	free(buf);
-	buf = NULL;
-	if (!line)
+	stash = fill_stash(fd, &stash, buf);
+	free_and_null(&buf);
+	if (!stash)
 		return (NULL);
-	stash = set_line(line);
+	line = set_line(&stash);
 	return (line);
 }
 /*Checks first that fd and BUFFER_SIZE are valid. It then makes a buffer (buf)
 of size BUFFER_SIZE + 1.*/
-
-/*
-int	main()
-{
-
-}
-*/
