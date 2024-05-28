@@ -13,6 +13,8 @@
 
 char	*ft_strchr(const char *s, int c)
 {
+	if (!s)
+		return (NULL);
 	while (*s)
 	{
 		if (*s == (char)c)
@@ -39,6 +41,8 @@ char	*ft_strdup(const char *s1)
 	char	*res;
 	size_t	i;
 
+	if (!s1)
+		return (NULL);
 	res = (char *)malloc((ft_strlen(s1) + 1) * sizeof(char));
 	if (!res)
 		return (NULL);
@@ -86,10 +90,6 @@ char	*ft_strjoin(char *stash, char *buf)
 
 	if (!stash && !buf)
 		return (NULL);
-	if (!stash)
-		return (ft_strdup(buf));
-	if (!buf)
-		return (stash);
 	s3 = malloc(ft_strlen(stash) + ft_strlen(buf) + 1);
 	if (!s3)
 		return (NULL);
@@ -99,6 +99,5 @@ char	*ft_strjoin(char *stash, char *buf)
 	while (*buf)
 		*s3++ = *buf++;
 	*s3 = '\0';
-    free (stash);
 	return (s3_ptr);
 }
