@@ -9,7 +9,7 @@
 /*   Updated: 2024/05/07 13:30:02 by eedwards         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include <stdio.h>
 
 static void	free_stash(char **stash)
@@ -104,30 +104,52 @@ sends the stash to the set_line funcion.*/
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*stash;
+	static char	*stash[MAX_FD];
 	char		*buf;
 
 	buf = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0 || !buf)
 	{
-		free_stash(&stash);
+		free_stash(&stash[fd]);
 		free_stash(&buf);
 		return (NULL);
 	}
-	stash = fill_stash(fd, &stash, buf);
+	stash[fd] = fill_stash(fd, &stash[fd], buf);
 	free (buf);
-	if (!stash)
+	if (!stash[fd])
 		return (NULL);
-	line = set_line(stash);
+	line = set_line(stash[fd]);
 	if (!line)
 	{
-		free_stash(&stash);
+		free_stash(&stash[fd]);
 		return (NULL);
 	}
-	stash = next_stash(stash);
+	stash[fd] = next_stash(stash[fd]);
 	return (line);
 }
 /*Checks first that fd and BUFFER_SIZE are valid. It then fills the stash with 
 fill_stash, gets the line to be output will set_line, and then set's the stash 
 to be used the next time with next_stash.*/
 
+/* int	main(void)
+{
+	int	fd;
+	char *line1;
+
+	fd = open("test.txt", O_RDONLY);
+	if (fd < 0)
+	{
+		printf("Error opening file\n");
+		return (1);
+	}
+	line1 = get_next_line(fd);
+	if (line1 != NULL)
+	{
+		printf("%s\n", line1);
+		free(line1);
+	}
+	//while ((line = get_next_line(fd)) != NULL)
+
+	close(fd);
+	return (0);
+} */
