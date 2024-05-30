@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
-#include <stdio.h>
 
 static void	free_stash(char **stash)
 {
@@ -38,6 +37,7 @@ static char	*set_line(char *stash)
 		return (NULL);
 	return (line);
 }
+/*Sets line as the stash until new line*/
 
 static char	*next_stash(char *stash)
 {
@@ -64,11 +64,8 @@ static char	*next_stash(char *stash)
 	return (temp);
 }
 
-/*Takes the line created in fill_line, checks for a new line or a NULL.
-If NULL is found stash should be empty as it is in the end of the file.
-If new line found it is set to NULL. If null is not found, a substring
-of the line starting from after the new line is made and returned to be
-set as stash*/
+/*If there is a new line and characters afterwards sets stash to the remaining
+characters after new line, otherwise frees and nulls stash.*/
 
 static char	*fill_stash(int fd, char **stash, char *buf)
 {
@@ -98,8 +95,7 @@ static char	*fill_stash(int fd, char **stash, char *buf)
 	return (*stash);
 }
 /*reads through fd while buf does not contain a new line or NULL. It joins stash
-and buf together and continues until buf does contain a new line or NULL. It then
-sends the stash to the set_line funcion.*/
+and buf together and continues until buf does contain a new line or NULL*/
 
 char	*get_next_line(int fd)
 {
@@ -130,4 +126,3 @@ char	*get_next_line(int fd)
 /*Checks first that fd and BUFFER_SIZE are valid. It then fills the stash with 
 fill_stash, gets the line to be output will set_line, and then set's the stash 
 to be used the next time with next_stash.*/
-
