@@ -1,14 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eedwards <eedwards@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/07 13:29:57 by eedwards          #+#    #+#             */
-/*   Updated: 2024/05/07 13:30:02 by eedwards         ###   ########.fr       */
+/*   Created: 2024/05/30 14:55:16 by eedwards          #+#    #+#             */
+/*   Updated: 2024/05/30 14:55:25 by eedwards         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "get_next_line_bonus.h"
 
 static void	free_stash(char **stash)

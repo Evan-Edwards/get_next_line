@@ -1,15 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eedwards <eedwards@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/07 13:30:27 by eedwards          #+#    #+#             */
-/*   Updated: 2024/05/13 15:31:23 by eedwards         ###   ########.fr       */
+/*   Created: 2024/05/30 14:55:56 by eedwards          #+#    #+#             */
+/*   Updated: 2024/05/30 14:57:27 by eedwards         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "get_next_line.h"
+
+#include "get_next_line_bonus.h"
 
 char	*ft_strchr(const char *s, int c)
 {
