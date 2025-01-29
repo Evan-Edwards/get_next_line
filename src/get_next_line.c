@@ -1,17 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eedwards <eedwards@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 14:55:16 by eedwards          #+#    #+#             */
-/*   Updated: 2024/05/30 14:55:25 by eedwards         ###   ########.fr       */
+/*   Updated: 2025/01/29 12:24:09 by eedwards         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "../incl/get_next_line.h"
 
+// Frees the stash and sets it to NULL if it exists
 static void	free_stash(char **stash)
 {
 	if (*stash)
@@ -21,6 +22,8 @@ static void	free_stash(char **stash)
 	}
 }
 
+// Creates and returns a substring from stash up to and including the first newline
+// Returns NULL if stash is empty or if memory allocation fails
 static char	*set_line(char *stash)
 {
 	int		i;
@@ -38,9 +41,9 @@ static char	*set_line(char *stash)
 		return (NULL);
 	return (line);
 }
-/*If there is a new line and characters afterwards sets stash to the remaining
-characters after new line, otherwise frees and nulls stash.*/
 
+// If there is a new line and characters afterwards sets stash to the remaining
+// characters after new line, otherwise frees and nulls stash
 static char	*next_stash(char *stash)
 {
 	int		i;
@@ -66,9 +69,8 @@ static char	*next_stash(char *stash)
 	return (temp);
 }
 
-/*If there is a new line and characters afterwards sets stash to the remaining
-characters after new line*/
-
+// Reads through fd while buf does not contain a new line or NULL
+// It joins stash and buf together and continues until buf does contain a new line or NULL
 static char	*fill_stash(int fd, char **stash, char *buf)
 {
 	ssize_t	b_read;
@@ -96,9 +98,10 @@ static char	*fill_stash(int fd, char **stash, char *buf)
 	}
 	return (*stash);
 }
-/*reads through fd while buf does not contain a new line or NULL. It joins stash
-and buf together and continues until buf does contain a new line or NULL*/
 
+// Checks first that fd and BUFFER_SIZE are valid
+// It then fills the stash with fill_stash, gets the line to be output with set_line
+// and then sets the stash to be used the next time with next_stash
 char	*get_next_line(int fd)
 {
 	char		*line;
@@ -125,6 +128,3 @@ char	*get_next_line(int fd)
 	stash[fd] = next_stash(stash[fd]);
 	return (line);
 }
-/*Checks first that fd and BUFFER_SIZE are valid. It then fills the stash with 
-fill_stash, gets the line to be output will set_line, and then set's the stash 
-to be used the next time with next_stash.*/
